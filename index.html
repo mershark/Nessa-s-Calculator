@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nessa's Ultra Beauty Cosmetics - Bolt Food Pricing Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated background elements */
+        .bg-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .shape1 {
+            top: 10%;
+            left: 10%;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 107, 157, 0.1);
+            border-radius: 50%;
+            animation-delay: 0s;
+        }
+
+        .shape2 {
+            top: 60%;
+            right: 10%;
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 107, 157, 0.08);
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            animation-delay: 2s;
+        }
+
+        .shape3 {
+            bottom: 20%;
+            left: 20%;
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 107, 157, 0.06);
+            border-radius: 20px;
+            transform: rotate(45deg);
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .main-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        .calculator-container {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.08);
+            padding: 50px;
+            max-width: 600px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calculator-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 107, 157, 0.02), transparent);
+            animation: shimmer 3s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .brand-logo {
+            font-size: 3em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #ff6b9d, #c44569, #ff9a9e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .brand-subtitle {
+            color: #666;
+            font-size: 1.1em;
+            font-style: italic;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2.4em;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.2em;
+            line-height: 1.5;
+        }
+
+        .commission-info {
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 35px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .commission-info::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+            animation: highlight 2s ease-in-out infinite;
+        }
+
+        @keyframes highlight {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        .commission-info h3 {
+            margin-bottom: 15px;
+            font-size: 1.4em;
+            position: relative;
+            z-index: 1;
+        }
+
+        .commission-breakdown {
+            font-size: 1em;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+            line-height: 1.6;
+        }
+
+        .input-section {
+            position: relative;
+            z-index: 2;
+        }
+
+        .input-group {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: 600;
+            font-size: 1.2em;
+            position: relative;
+        }
+
+        .input-group label::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(135deg, #ff6b9d, #c44569);
+            border-radius: 2px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 20px 45px 20px 45px;
+            border: 3px solid #e0e0e0;
+            border-radius: 15px;
+            font-size: 1.2em;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #ff6b9d;
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .currency-symbol {
+            position: relative;
+        }
+
+        .currency-symbol::before {
+            content: "₵";
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ff6b9d;
+            font-weight: bold;
+            font-size: 1.4em;
+            z-index: 2;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+            color: white;
+            border: none;
+            padding: 22px;
+            border-radius: 15px;
+            font-size: 1.3em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .calculate-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(255, 107, 157, 0.4);
+        }
+
+        .calculate-btn:hover::before {
+            left: 100%;
+        }
+
+        .calculate-btn:active {
+            transform: translateY(-2px);
+        }
+
+        .results {
+            background: #f8f9fa;
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 25px;
+            display: none;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #e9ecef;
+        }
+
+        .results::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, rgba(255, 107, 157, 0.1), rgba(196, 69, 105, 0.1));
+            border-radius: 20px;
+            z-index: -1;
+            animation: borderRotate 3s linear infinite;
+        }
+
+        @keyframes borderRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results.show {
+            display: block;
+            animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .results-title {
+            font-size: 1.5em;
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .results-subtitle {
+            color: #666;
+            font-size: 1em;
+            font-style: italic;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            font-size: 1.1em;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(255, 107, 157, 0.1);
+        }
+
+        .result-item:hover {
+            transform: translateX(5px);
+        }
+
+        .result-item:last-child {
+            margin-bottom: 0;
+            padding: 20px;
+            border: 3px solid rgba(255, 107, 157, 0.3);
+            font-weight: 700;
+            font-size: 1.4em;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .result-label {
+            color: #333;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        .result-label::before {
+            content: '●';
+            color: #ff6b9d;
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .result-value {
+            color: #2c3e50;
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
+        .final-price {
+            color: #c44569 !important;
+            font-size: 1.6em !important;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .safety-margin {
+            background: #f1f3f4;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            text-align: center;
+            border: 1px solid #e8eaed;
+        }
+
+        .safety-margin h4 {
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 1.2em;
+        }
+
+        .safety-margin p {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 1200px) {
+            .calculator-container {
+                max-width: 550px;
+                padding: 45px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .calculator-container {
+                max-width: 500px;
+                padding: 40px;
+            }
+            
+            .brand-logo {
+                font-size: 2.5em;
+            }
+            
+            .header h1 {
+                font-size: 2.2em;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+
+            .calculator-container {
+                padding: 35px 25px;
+                margin: 10px;
+                border-radius: 20px;
+                max-width: 100%;
+            }
+            
+            .brand-logo {
+                font-size: 2.2em;
+                line-height: 1.2;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+                line-height: 1.3;
+            }
+            
+            .header p {
+                font-size: 1.1em;
+            }
+
+            .commission-info {
+                padding: 20px;
+                margin-bottom: 30px;
+            }
+
+            .commission-info h3 {
+                font-size: 1.3em;
+            }
+
+            .commission-breakdown {
+                font-size: 0.95em;
+                line-height: 1.5;
+            }
+
+            .input-group {
+                margin-bottom: 25px;
+            }
+
+            .input-group label {
+                font-size: 1.1em;
+                margin-bottom: 8px;
+            }
+
+            .input-group input {
+                padding: 18px 40px 18px 40px;
+                font-size: 1.1em;
+            }
+
+            .calculate-btn {
+                padding: 20px;
+                font-size: 1.2em;
+            }
+
+            .results {
+                padding: 25px;
+            }
+
+            .results-title {
+                font-size: 1.4em;
+            }
+
+            .result-item {
+                padding: 12px;
+                font-size: 1em;
+                margin-bottom: 15px;
+            }
+
+            .result-item:last-child {
+                padding: 18px;
+                font-size: 1.3em;
+            }
+
+            .final-price {
+                font-size: 1.5em !important;
+            }
+        }
+
+        @media (max-width: 576px) {
+            body {
+                padding: 10px;
+            }
+
+            .calculator-container {
+                padding: 25px 20px;
+                border-radius: 18px;
+            }
+            
+            .brand-logo {
+                font-size: 1.9em;
+                margin-bottom: 8px;
+            }
+
+            .brand-subtitle {
+                font-size: 1em;
+                margin-bottom: 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+                margin-bottom: 12px;
+            }
+
+            .header p {
+                font-size: 1em;
+            }
+
+            .commission-info {
+                padding: 18px;
+                margin-bottom: 25px;
+            }
+
+            .commission-info h3 {
+                font-size: 1.2em;
+                margin-bottom: 12px;
+            }
+
+            .commission-breakdown {
+                font-size: 0.9em;
+                line-height: 1.4;
+            }
+
+            .input-group {
+                margin-bottom: 20px;
+            }
+
+            .input-group label {
+                font-size: 1em;
+                margin-bottom: 6px;
+            }
+
+            .input-group input {
+                padding: 16px 35px 16px 35px;
+                font-size: 1em;
+                border-radius: 12px;
+            }
+
+            .currency-symbol::before {
+                left: 15px;
+                font-size: 1.2em;
+            }
+
+            .calculate-btn {
+                padding: 18px;
+                font-size: 1.1em;
+                border-radius: 12px;
+                margin-bottom: 25px;
+            }
+
+            .results {
+                padding: 20px;
+                border-radius: 15px;
+            }
+
+            .results-title {
+                font-size: 1.3em;
+                margin-bottom: 4px;
+            }
+
+            .results-subtitle {
+                font-size: 0.9em;
+            }
+
+            .result-item {
+                padding: 10px;
+                font-size: 0.95em;
+                margin-bottom: 12px;
+                border-radius: 10px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .result-item:last-child {
+                padding: 15px;
+                font-size: 1.2em;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                gap: 8px;
+            }
+
+            .result-label {
+                font-size: 0.9em;
+            }
+
+            .result-value {
+                font-size: 1em;
+            }
+
+            .final-price {
+                font-size: 1.4em !important;
+            }
+
+            .safety-margin {
+                padding: 15px;
+                margin-top: 15px;
+            }
+
+            .safety-margin h4 {
+                font-size: 1.1em;
+                margin-bottom: 6px;
+            }
+
+            .safety-margin p {
+                font-size: 0.9em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .calculator-container {
+                padding: 20px 15px;
+            }
+            
+            .brand-logo {
+                font-size: 1.7em;
+            }
+            
+            .header h1 {
+                font-size: 1.6em;
+            }
+
+            .input-group input {
+                padding: 15px 32px 15px 32px;
+            }
+
+            .currency-symbol::before {
+                left: 12px;
+                font-size: 1.1em;
+            }
+
+            .calculate-btn {
+                padding: 16px;
+                font-size: 1em;
+            }
+
+            .commission-breakdown {
+                font-size: 0.85em;
+            }
+        }
+
+        @media (max-width: 375px) {
+            .calculator-container {
+                padding: 18px 12px;
+            }
+            
+            .brand-logo {
+                font-size: 1.5em;
+            }
+            
+            .header h1 {
+                font-size: 1.4em;
+            }
+
+            .header p {
+                font-size: 0.95em;
+            }
+
+            .commission-info {
+                padding: 15px;
+            }
+
+            .commission-breakdown {
+                font-size: 0.8em;
+            }
+
+            .input-group input {
+                padding: 14px 30px 14px 30px;
+                font-size: 0.95em;
+            }
+
+            .results {
+                padding: 15px;
+            }
+
+            .result-item {
+                padding: 8px;
+                font-size: 0.9em;
+            }
+
+            .result-item:last-child {
+                padding: 12px;
+                font-size: 1.1em;
+            }
+
+            .final-price {
+                font-size: 1.3em !important;
+            }
+        }
+
+        /* Landscape orientation for mobile devices */
+        @media (max-width: 768px) and (orientation: landscape) {
+            body {
+                padding: 10px;
+            }
+
+            .calculator-container {
+                padding: 20px;
+                margin: 5px;
+            }
+
+            .header {
+                margin-bottom: 20px;
+            }
+
+            .brand-logo {
+                font-size: 1.8em;
+            }
+
+            .header h1 {
+                font-size: 1.7em;
+                margin-bottom: 10px;
+            }
+
+            .commission-info {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+
+            .input-group {
+                margin-bottom: 18px;
+            }
+
+            .calculate-btn {
+                margin-bottom: 20px;
+            }
+
+            .results {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-shapes">
+        <div class="shape shape1"></div>
+        <div class="shape shape2"></div>
+        <div class="shape shape3"></div>
+    </div>
+
+    <div class="main-container">
+        <div class="calculator-container">
+            <div class="header">
+                <div class="brand-logo">💄✨ Nessa's Ultra Beauty</div>
+                <div class="brand-subtitle">Premium Cosmetics & Beauty Solutions</div>
+                <h1>🚚 Bolt Food Pricing Calculator</h1>
+                <p>Advanced pricing tool to maximize your profit margins</p>
+            </div>
+
+            <div class="commission-info">
+                <h3>📊 Commission Structure (Rounded for Safety)</h3>
+                <div class="commission-breakdown">
+                    <strong>Bolt Commission Calculation:</strong><br>
+                    • Base Commission: 20%<br>
+                    • VAT on Commission: 21.9% of 20% = 4.38%<br>
+                    • Total: 20% + 4.38% = <strong>24.38%</strong><br><br>
+                    <strong>Rounded to: 25% (Extra 0.62% Safety Margin)</strong><br>
+                    This ensures you always exceed your profit targets!
+                </div>
+            </div>
+
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="desiredProfit">💰 Target Profit Amount</label>
+                    <div class="input-wrapper">
+                        <div class="currency-symbol">
+                            <input type="number" id="desiredProfit" placeholder="Enter your desired profit (e.g., 100)" step="0.01" min="0">
+                        </div>
+                    </div>
+                </div>
+
+                <button class="calculate-btn" onclick="calculatePrice()">
+                    🧮 Calculate Optimal Price
+                </button>
+            </div>
+
+            <div class="results" id="results">
+                <div class="results-header">
+                    <div class="results-title">💎 Pricing Breakdown</div>
+                    <div class="results-subtitle">Optimized for maximum profitability</div>
+                </div>
+                
+                <div class="result-item">
+                    <span class="result-label">Your Target Profit</span>
+                    <span class="result-value" id="profitAmount">₵0.00</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Platform Commission (25%)</span>
+                    <span class="result-value" id="commissionAmount">₵0.00</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Set This Price on Bolt Food</span>
+                    <span class="result-value final-price" id="sellingPrice">₵0.00</span>
+                </div>
+
+                <div class="safety-margin">
+                    <h4>🛡️ Built-in Safety Margin</h4>
+                    <p>You'll earn <strong>0.62% extra</strong> above your target profit, giving you a buffer for any unexpected costs or fluctuations.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculatePrice() {
+            const desiredProfitInput = document.getElementById('desiredProfit');
+            const desiredProfit = parseFloat(desiredProfitInput.value);
+
+            // Enhanced input validation
+            if (isNaN(desiredProfit) || desiredProfit <= 0) {
+                // Create custom alert styling
+                showCustomAlert('⚠️ Please enter a valid profit amount greater than 0');
+                desiredProfitInput.focus();
+                return;
+            }
+
+            // Using rounded 25% commission rate for safety margin
+            const commissionRate = 0.25; // 25%
+            
+            // Calculate the selling price
+            // Formula: Selling Price = Desired Profit / (1 - Commission Rate)
+            const sellingPrice = desiredProfit / (1 - commissionRate);
+            const commissionAmount = sellingPrice * commissionRate;
+
+            // Display results with animation delay
+            setTimeout(() => {
+                document.getElementById('profitAmount').textContent = `₵${desiredProfit.toFixed(2)}`;
+            }, 100);
+            
+            setTimeout(() => {
+                document.getElementById('commissionAmount').textContent = `₵${commissionAmount.toFixed(2)}`;
+            }, 200);
+            
+            setTimeout(() => {
+                document.getElementById('sellingPrice').textContent = `₵${sellingPrice.toFixed(2)}`;
+            }, 300);
+
+            // Show results with enhanced animation
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.classList.add('show');
+
+            // Scroll to results on mobile with smooth animation
+            setTimeout(() => {
+                if (window.innerWidth <= 768) {
+                    resultsDiv.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'center',
+                        inline: 'nearest'
+                    });
+                }
+            }, 400);
+        }
+
+        function showCustomAlert(message) {
+            // Create a custom alert that matches the design
+            const alertDiv = document.createElement('div');
+            alertDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: linear-gradient(135deg, #ff6b9d, #c44569);
+                color: white;
+                padding: 15px 25px;
+                border-radius: 15px;
+                box-shadow: 0 10px 25px rgba(255, 107, 157, 0.3);
+                z-index: 1000;
+                font-weight: 600;
+                font-size: 1.1em;
+                animation: slideDown 0.3s ease;
+            `;
+            alertDiv.textContent = message;
+            document.body.appendChild(alertDiv);
+
+            // Add slideDown animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideDown {
+                    from { transform: translateX(-50%) translateY(-20px); opacity: 0; }
+                    to { transform: translateX(-50%) translateY(0); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+
+            // Remove after 3 seconds
+            setTimeout(() => {
+                alertDiv.style.animation = 'slideDown 0.3s ease reverse';
+                setTimeout(() => {
+                    document.body.removeChild(alertDiv);
+                    document.head.removeChild(style);
+                }, 300);
+            }, 3000);
+        }
+
+        // Enhanced Enter key functionality
+        document.getElementById('desiredProfit').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                calculatePrice();
+            }
+        });
+
+        // Auto-focus with slight delay for better UX
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('desiredProfit').focus();
+            }, 500);
+        });
+
+        // Add input animation on focus/blur
+        const input = document.getElementById('desiredProfit');
+        input.addEventListener('focus', function() {
+            this.parentElement.parentElement.style.transform = 'scale(1.02)';
+        });
+
+        input.addEventListener('blur', function() {
+            this.parentElement.parentElement.style.transform = 'scale(1)';
+        });
+    </script>
+</body>
+</html>
